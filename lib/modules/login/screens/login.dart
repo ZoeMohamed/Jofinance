@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:jofinance/modules/login/repository/google_sign_in.dart';
+import 'package:jofinance/utils/services/google_auth_service.dart';
 import 'package:jofinance/modules/dashboard/screens/main_page.dart';
 import 'package:jofinance/modules/register/screens/register.dart';
 import 'package:sizer/sizer.dart';
@@ -195,9 +195,9 @@ class _LoginPageState extends State<LoginPage> {
             GestureDetector(
               onTap: () {
                 final provider =
-                    Provider.of<GoogleSignInProvider>(context, listen: false);
+                    Provider.of<GoogleauthService>(context, listen: false);
 
-                provider.googleLogin();
+                provider.googleSignIn();
               },
               child: Image.asset(
                 "assets/appImages/google_logo.png",

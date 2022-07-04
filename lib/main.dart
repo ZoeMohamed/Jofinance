@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:jofinance/modules/login/repository/google_sign_in.dart';
-import 'package:jofinance/modules/login/screens/login.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:jofinance/utils/services/google_auth_service.dart';
 import 'package:jofinance/modules/transition/auth_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         ),
         child: Sizer(builder: (context, orientation, devicetype) {
           return ChangeNotifierProvider(
-            create: (context) => GoogleSignInProvider(),
+            create: (context) => GoogleauthService(GoogleSignIn()),
             child: const MaterialApp(
                 debugShowCheckedModeBanner: false, home: TransitionPage()),
           );

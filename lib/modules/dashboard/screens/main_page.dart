@@ -2,11 +2,11 @@ import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:jofinance/modules/login/repository/google_sign_in.dart';
+import 'package:jofinance/utils/services/google_auth_service.dart';
 import 'package:jofinance/modules/login/models/user_login.dart';
 import 'package:jofinance/modules/login/screens/login.dart';
 import 'package:jofinance/modules/register/screens/register.dart';
-import 'package:jofinance/utils/services/firebase_service.dart';
+import 'package:jofinance/utils/services/firestore_service.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -60,10 +60,10 @@ class _MainPageState extends State<MainPage> {
             child: Text("mantep")),
         ElevatedButton(
             onPressed: () {
-              final logout =
-                  Provider.of<GoogleSignInProvider>(context, listen: false);
+              final provider =
+                  Provider.of<GoogleauthService>(context, listen: false);
 
-              logout.googleLogout().then((value) =>
+              provider.googleSignOut().then((value) =>
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return LoginPage();
                   })));

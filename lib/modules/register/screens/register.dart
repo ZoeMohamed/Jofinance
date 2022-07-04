@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:jofinance/modules/login/repository/google_sign_in.dart';
+import 'package:jofinance/utils/services/google_auth_service.dart';
 import 'package:jofinance/modules/login/screens/login.dart';
-import 'package:jofinance/utils/services/firebase_service.dart';
+import 'package:jofinance/utils/services/firestore_service.dart';
 import 'package:sizer/sizer.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'dart:developer';
@@ -114,10 +114,10 @@ class _RegisterPageState extends State<RegisterPage> {
               child: Text("Register")),
           ElevatedButton(
               onPressed: () {
-                final logout =
-                    Provider.of<GoogleSignInProvider>(context, listen: false);
+                final provider =
+                    Provider.of<GoogleauthService>(context, listen: false);
 
-                logout.googleLogout().then((value) => Navigator.push(context,
+                provider.googleSignOut().then((value) => Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
                       return LoginPage();
                     })));

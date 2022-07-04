@@ -15,9 +15,6 @@ class TransitionPage extends StatefulWidget {
 }
 
 class _TransitionPageState extends State<TransitionPage> {
-  // Initialize Firebase Auth Class
-  FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +31,7 @@ class _TransitionPageState extends State<TransitionPage> {
             // Navigate to Mainpage if there is authchanges
           } else {
             // Navigate to Login
-            return const LoginPage();
+            return const RegisterPage();
           }
         },
       ),

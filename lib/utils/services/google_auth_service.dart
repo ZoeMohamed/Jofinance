@@ -1,17 +1,18 @@
 import 'dart:developer';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:jofinance/modules/dashboard/screens/main_page.dart';
 
-class GoogleSignInProvider extends ChangeNotifier {
-  final googleSignIn = GoogleSignIn();
+class GoogleauthService extends ChangeNotifier {
+  final GoogleSignIn _googleSignIn;
+  GoogleauthService(this._googleSignIn);
+
   GoogleSignInAccount? _user;
   GoogleSignInAccount get user => _user!;
 
-  Future googleLogin() async {
-    final googleUser = await googleSignIn.signIn();
+  Future googleSignIn() async {
+    final googleUser = await _googleSignIn.signIn();
     if (googleUser == null) return;
     _user = googleUser;
 
@@ -21,18 +22,18 @@ class GoogleSignInProvider extends ChangeNotifier {
         idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
 
     await FirebaseAuth.instance.signInWithCredential(credential);
-    // await FirebaseFirestore.instance
-    //     .collection("users")
-    //     .doc(FirebaseAuth.instance.currentUser!.uid.toString())
-    //     .set({"user_id": FirebaseAuth.instance.currentUser!.uid.toString()});
-    log("message");
+
+    // Notify Provider listener if there is change in widget tree
     notifyListeners();
   }
 
-  Future googleLogout() async {
+  Future googleSignOut() async {
     try {
+      await _googleSignIn.disconnect();
+
       FirebaseAuth.instance.signOut();
-      googleSignIn.disconnect();
-    } catch (e) {}
+    } catch (e) {
+      return e.toString();
+    }
   }
 }
