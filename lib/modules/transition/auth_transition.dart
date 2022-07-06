@@ -20,7 +20,7 @@ class _TransitionPageState extends State<TransitionPage> {
     return Scaffold(
       body: StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapshot) {
+        builder: (context, AsyncSnapshot snapshot) {
           // Waiting Data from stream
           log(FirebaseAuth.instance.authStateChanges().toString());
 
