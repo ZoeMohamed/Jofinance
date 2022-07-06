@@ -22,16 +22,17 @@ class _TransitionPageState extends State<TransitionPage> {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           // Waiting Data from stream
+          log(FirebaseAuth.instance.authStateChanges().toString());
+
           if (snapshot.connectionState == ConnectionState.waiting) {
             return CircularProgressIndicator();
           } else if (snapshot.hasData) {
             log("ini datanya ada ");
-            log(snapshot.data.toString());
             return MainPage();
             // Navigate to Mainpage if there is authchanges
           } else {
             // Navigate to Login
-            return const RegisterPage();
+            return const LoginPage();
           }
         },
       ),
