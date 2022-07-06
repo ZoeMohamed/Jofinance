@@ -35,6 +35,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    log("P");
     return Scaffold(
         body: Column(
       children: [
