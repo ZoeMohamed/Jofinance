@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         ),
         child: Sizer(builder: (context, orientation, devicetype) {
           return ChangeNotifierProvider(
-            create: (context) => GoogleauthService(GoogleSignIn()),
+            create: (context) => GoogleauthService(),
             child: const MaterialApp(
                 debugShowCheckedModeBanner: false, home: TransitionPage()),
           );
