@@ -5,8 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class GoogleauthService extends ChangeNotifier {
-  final GoogleSignIn _googleSignIn;
-  GoogleauthService(this._googleSignIn);
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   GoogleSignInAccount? _user;
   GoogleSignInAccount get user => _user!;
