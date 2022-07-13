@@ -20,6 +20,8 @@ class GoogleauthService extends ChangeNotifier {
     final credential = GoogleAuthProvider.credential(
         idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
 
+    // Check if there is no linking with google
+
     await FirebaseAuth.instance.signInWithCredential(credential);
 
     // Notify Provider listener if there is change in widget tree
@@ -28,11 +30,24 @@ class GoogleauthService extends ChangeNotifier {
 
   Future googleSignOut() async {
     try {
-      await _googleSignIn.disconnect();
+      (FirebaseAuth.instance.fetchSignInMethodsForEmail(
+              FirebaseAuth.instance.currentUser!.email.toString()))
+          .then((value) => log(value.toString()));
+      final check_fetch = await FirebaseAuth.instance
+          .fetchSignInMethodsForEmail(
+              FirebaseAuth.instance.currentUser!.email.toString())
+          .then((value) => value);
+      if ((check_fetch.length) > 0) {
+        await _googleSignIn.disconnect();
 
-      FirebaseAuth.instance.signOut();
+        FirebaseAuth.instance.signOut();
+      } else {
+        await _googleSignIn.disconnect();
+
+        FirebaseAuth.instance.signOut();
+      }
     } catch (e) {
-      return e.toString();
+      log(e.toString());
     }
   }
 }

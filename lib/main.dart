@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:jofinance/utils/services/google_auth_service.dart';
 import 'package:jofinance/modules/transition/auth_transition.dart';
 import 'package:provider/provider.dart';

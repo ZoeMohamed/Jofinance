@@ -27,7 +27,7 @@ class _TransitionPageState extends State<TransitionPage> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return CircularProgressIndicator();
           } else if (snapshot.hasData) {
-            log("ini datanya ada ");
+            log(snapshot.data.toString());
             return MainPage();
             // Navigate to Mainpage if there is authchanges
           } else {
