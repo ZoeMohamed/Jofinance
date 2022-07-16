@@ -1,9 +1,7 @@
 import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:jofinance/utils/services/google_auth_service.dart';
-import 'package:jofinance/modules/dashboard/screens/main_page.dart';
 import 'package:jofinance/modules/register/screens/register.dart';
 import 'package:sizer/sizer.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
@@ -132,17 +130,18 @@ class _LoginPageState extends State<LoginPage> {
                 width: 330,
                 child: ElevatedButton(
                     onPressed: () async {
-                      setState(() {});
-                      try {
-                        final credential = FirebaseAuth.instance
-                            .signInWithEmailAndPassword(
-                                email: _emailcontroller.text.trim(),
-                                password: _passwordcontroller.text.trim());
-                      } catch (e) {
-                        log(e.toString());
-                        if (e == 'user-not-found') {
-                        } else if (e == 'wrong-password') {}
-                      }
+                      setState(() {
+                        try {
+                          final credential = FirebaseAuth.instance
+                              .signInWithEmailAndPassword(
+                                  email: _emailcontroller.text.trim(),
+                                  password: _passwordcontroller.text.trim());
+                        } catch (e) {
+                          log(e.toString());
+                          if (e == 'user-not-found') {
+                          } else if (e == 'wrong-password') {}
+                        }
+                      });
                     },
                     child: Text(
                       "Login",

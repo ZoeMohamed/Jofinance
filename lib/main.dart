@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:jofinance/utils/services/email_auth_service.dart';
 import 'package:jofinance/utils/services/google_auth_service.dart';
 import 'package:jofinance/modules/transition/auth_transition.dart';
 import 'package:provider/provider.dart';
@@ -22,8 +23,14 @@ class MyApp extends StatelessWidget {
           statusBarColor: Colors.black,
         ),
         child: Sizer(builder: (context, orientation, devicetype) {
-          return ChangeNotifierProvider(
-            create: (context) => GoogleauthService(),
+          return MultiProvider(
+            providers: [
+              ChangeNotifierProvider<EmailAuthService>(
+                  create: (context) => EmailAuthService()),
+              ChangeNotifierProvider<GoogleauthService>(
+                create: (context) => GoogleauthService(),
+              ),
+            ],
             child: const MaterialApp(
                 debugShowCheckedModeBanner: false, home: TransitionPage()),
           );

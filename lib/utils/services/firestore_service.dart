@@ -17,6 +17,19 @@ class FirestoreService {
     }
   }
 
+  // Save username registant to firestore
+  Future saveUser(userid, username) async {
+    DocumentReference documentReferencer =
+        FirebaseFirestore.instance.collection('users').doc(userid);
+
+    Map<String, dynamic> data = <String, dynamic>{"username": username};
+
+    await documentReferencer
+        .set(data)
+        .whenComplete(() => print("New User added to Firestore"))
+        .catchError((e) => print(e));
+  }
+
   readUsers(x) async {
     CollectionReference _collectionRef =
         FirebaseFirestore.instance.collection('users');

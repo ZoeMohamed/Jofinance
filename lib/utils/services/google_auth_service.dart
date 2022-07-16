@@ -24,6 +24,10 @@ class GoogleauthService extends ChangeNotifier {
 
     await FirebaseAuth.instance.signInWithCredential(credential);
 
+    FirebaseAuth.instance.currentUser!.linkWithCredential(
+        EmailAuthProvider.credential(
+            email: "zoemohamed31@gmail.com", password: "123456"));
+
     // Notify Provider listener if there is change in widget tree
     notifyListeners();
   }
@@ -38,6 +42,8 @@ class GoogleauthService extends ChangeNotifier {
               FirebaseAuth.instance.currentUser!.email.toString())
           .then((value) => value);
       if ((check_fetch.length) > 0) {
+        FirebaseAuth.instance.currentUser!.unlink("password");
+
         await _googleSignIn.disconnect();
 
         FirebaseAuth.instance.signOut();
