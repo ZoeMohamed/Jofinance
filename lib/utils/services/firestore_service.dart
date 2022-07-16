@@ -5,7 +5,7 @@ import 'package:jofinance/modules/login/models/user_login.dart';
 
 class FirestoreService {
   // Read specific user
-  Future<Userauth?> readUser() async {
+  Future<String> readUser() async {
     final docUser = FirebaseFirestore.instance
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.uid);
@@ -13,7 +13,9 @@ class FirestoreService {
     final snapshot = await docUser.get();
 
     if (snapshot.exists) {
-      return Userauth.fromJson(snapshot.data()!);
+      return snapshot.data().toString();
+    } else {
+      return "knto";
     }
   }
 

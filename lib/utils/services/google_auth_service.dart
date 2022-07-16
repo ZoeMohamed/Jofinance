@@ -48,7 +48,8 @@ class GoogleauthService extends ChangeNotifier {
 
         FirebaseAuth.instance.signOut();
       } else {
-        await _googleSignIn.disconnect();
+        // FirebaseAuth.instance.currentUser!.unlink("google.com");
+        // await _googleSignIn.disconnect();
 
         FirebaseAuth.instance.signOut();
       }

@@ -25,7 +25,6 @@ class _MainPageState extends State<MainPage> {
 
   @override
   void initState() {
-    readUser();
     super.initState();
   }
 
@@ -51,43 +50,51 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: FutureBuilder(
-            future: FirebaseFirestore.instance
-                .collection('users')
-                .doc(FirebaseAuth.instance.currentUser!.uid)
-                .get(),
-            builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-              return Column(
-                children: [
-                  SizedBox(
-                    height: 92,
-                  ),
-                  Container(
-                    color: Colors.black,
-                    child: Text(
-                      FirebaseAuth.instance.currentUser!.email.toString(),
-                      style: TextStyle(
-                        fontSize: 45,
-                        color: Colors.white,
+        body: FutureBuilder<Userauth?>(
+            future: readUser(),
+            builder: (context, snapshot) {
+              final user = snapshot.data;
+
+              if (snapshot.hasData) {
+                return Column(
+                  children: [
+                    SizedBox(
+                      height: 92,
+                    ),
+                    Container(
+                      color: Colors.black,
+                      child: Text(
+                        user!.bio.toString(),
+                        style: TextStyle(
+                          fontSize: 45,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
-                  ),
-                  ElevatedButton(
-                      onPressed: () async {
-                        readUser();
-                      },
-                      child: Text("mantep")),
-                  ElevatedButton(
-                      onPressed: () {
-                        final provider = Provider.of<GoogleauthService>(context,
-                            listen: false);
-                        provider
-                            .googleSignOut()
-                            .whenComplete(() => LoginPage());
-                      },
-                      child: Text("Logout"))
-                ],
-              );
+                    ElevatedButton(
+                        onPressed: () async {
+                          log("e");
+                        },
+                        child: Text("mantep")),
+                    ElevatedButton(
+                        onPressed: () {
+                          final provider = Provider.of<GoogleauthService>(
+                              context,
+                              listen: false);
+                          provider
+                              .googleSignOut()
+                              .whenComplete(() => LoginPage());
+                        },
+                        child: Text("Logout"))
+                  ],
+                );
+              } else {
+                return Container(
+                  width: 2200,
+                  height: 2200,
+                  color: Colors.black,
+                );
+              }
             }));
   }
 }

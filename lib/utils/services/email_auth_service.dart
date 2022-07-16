@@ -11,7 +11,7 @@ class EmailAuthService extends ChangeNotifier {
     try {
       await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
-
+      //After creating user save UID to firestore
       FirestoreService()
           .saveUser(FirebaseAuth.instance.currentUser!.uid, username);
     } catch (e) {
