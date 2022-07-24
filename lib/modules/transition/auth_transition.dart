@@ -19,15 +19,30 @@ class TransitionPage extends StatefulWidget {
 class _TransitionPageState extends State<TransitionPage> {
   @override
   Widget build(BuildContext context) {
-    User? auth = context.watch<User?>();
+    GoogleauthService auth =
+        Provider.of<GoogleauthService>(context, listen: false);
+    return Scaffold(
+      body: StreamBuilder<User?>(
+        stream: auth.onAuthStateChanged,
+        builder: (context, AsyncSnapshot snapshot) {
+          // Waiting Data from stream
+          log(snapshot.data.toString());
+          log(FirebaseAuth.instance.currentUser?.displayName.toString() ??
+              "No users");
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CircularProgressIndicator();
+          } else if (snapshot.hasData) {
+            log("data user ada");
 
-    log(auth.toString());
-
-    if (auth == null) {
-      return LoginPage();
-    } else {
-      return MainPage();
-    }
+            return const MainPage();
+            // Navigate to Mainpage if there is authchanges
+          } else {
+            // Navigate to Login
+            return const LoginPage();
+          }
+        },
+      ),
+    );
   }
 }
 

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:jofinance/modules/dashboard/screens/main_page.dart';
 
 class GoogleauthService extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -27,11 +28,13 @@ class GoogleauthService extends ChangeNotifier {
     final check = await FirebaseAuth.instance.signInWithCredential(credential);
     log(check.additionalUserInfo.toString());
 
-    FirebaseAuth.instance.currentUser!.linkWithCredential(
-        EmailAuthProvider.credential(
-            email: "zoemohamed31@gmail.com", password: "123456"));
+    FirebaseAuth.instance.currentUser!
+        .linkWithCredential(EmailAuthProvider.credential(
+            email: "zoemohamed31@gmail.com", password: "123456"))
+        .whenComplete(() => const MainPage());
 
     // Notify Provider listener if there is change in widget tree
+
     notifyListeners();
   }
 
@@ -45,7 +48,7 @@ class GoogleauthService extends ChangeNotifier {
               FirebaseAuth.instance.currentUser!.email.toString())
           .then((value) => value);
       if ((check_fetch.length) > 0) {
-        // FirebaseAuth.instance.currentUser!.unlink("password");
+        FirebaseAuth.instance.currentUser!.unlink("password");
         await _googleSignIn.disconnect();
         FirebaseAuth.instance.signOut();
         notifyListeners();
