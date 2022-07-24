@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class GoogleauthService extends ChangeNotifier {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  Stream<User?> get onAuthStateChanged => _auth.authStateChanges();
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   GoogleSignInAccount? _user;
@@ -22,7 +24,8 @@ class GoogleauthService extends ChangeNotifier {
 
     // Check if there is no linking with google
 
-    await FirebaseAuth.instance.signInWithCredential(credential);
+    final check = await FirebaseAuth.instance.signInWithCredential(credential);
+    log(check.additionalUserInfo.toString());
 
     FirebaseAuth.instance.currentUser!.linkWithCredential(
         EmailAuthProvider.credential(
@@ -42,16 +45,15 @@ class GoogleauthService extends ChangeNotifier {
               FirebaseAuth.instance.currentUser!.email.toString())
           .then((value) => value);
       if ((check_fetch.length) > 0) {
-        FirebaseAuth.instance.currentUser!.unlink("password");
-
+        // FirebaseAuth.instance.currentUser!.unlink("password");
         await _googleSignIn.disconnect();
-
         FirebaseAuth.instance.signOut();
+        notifyListeners();
       } else {
         // FirebaseAuth.instance.currentUser!.unlink("google.com");
-        // await _googleSignIn.disconnect();
 
         FirebaseAuth.instance.signOut();
+        notifyListeners();
       }
     } catch (e) {
       log(e.toString());

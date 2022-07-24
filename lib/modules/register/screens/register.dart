@@ -183,9 +183,9 @@ class _RegisterPageState extends State<RegisterPage> {
                             listen: false);
 
                         provider.registerUsingEmailPassword(
-                            password: _passwordcontroller.text,
-                            email: _emailcontroller.text,
-                            username: _usernamecontroller.text);
+                            password: _passwordcontroller.text.trim(),
+                            email: _emailcontroller.text.trim(),
+                            username: _usernamecontroller.text.trim());
                       },
                       child: Text(
                         "Register",

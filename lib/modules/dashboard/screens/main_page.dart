@@ -25,6 +25,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   void initState() {
+    log("tes");
     super.initState();
   }
 
@@ -50,51 +51,63 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: FutureBuilder<Userauth?>(
-            future: readUser(),
-            builder: (context, snapshot) {
-              final user = snapshot.data;
+        body: Center(
+      child: ElevatedButton(
+          onPressed: () {
+            final provider =
+                Provider.of<GoogleauthService>(context, listen: false);
+            provider.googleSignOut().whenComplete(() => LoginPage());
+          },
+          child: Text("Logout")),
+    ));
+    // body: FutureBuilder<Userauth?>(
+    //     future: readUser(),
+    //     builder: (context, snapshot) {
+    //       final user = snapshot.data;
 
-              if (snapshot.hasData) {
-                return Column(
-                  children: [
-                    SizedBox(
-                      height: 92,
-                    ),
-                    Container(
-                      color: Colors.black,
-                      child: Text(
-                        user!.bio.toString(),
-                        style: TextStyle(
-                          fontSize: 45,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    ElevatedButton(
-                        onPressed: () async {
-                          log("e");
-                        },
-                        child: Text("mantep")),
-                    ElevatedButton(
-                        onPressed: () {
-                          final provider = Provider.of<GoogleauthService>(
-                              context,
-                              listen: false);
-                          provider
-                              .googleSignOut()
-                              .whenComplete(() => LoginPage());
-                        },
-                        child: Text("Logout"))
-                  ],
-                );
-              } else {
-                return Container(
-                  width: 2200,
-                  height: 2200,
-                  color: Colors.black,
-                );
-              }
-            }));
+    //       if (snapshot.hasData) {
+    //         return Column(
+    //           children: [
+    //             SizedBox(
+    //               height: 92,
+    //             ),
+    //             Container(
+    //               color: Colors.black,
+    //               child: Text(
+    //                 user!.bio.toString(),
+    //                 style: TextStyle(
+    //                   fontSize: 45,
+    //                   color: Colors.white,
+    //                 ),
+    //               ),
+    //             ),
+    //             ElevatedButton(
+    //                 onPressed: () async {
+    //                   log("e");
+    //                 },
+    //                 child: Text("mantep")),
+    //             ElevatedButton(
+    //                 onPressed: () {
+    //                   final provider = Provider.of<GoogleauthService>(
+    //                       context,
+    //                       listen: false);
+    //                   provider
+    //                       .googleSignOut()
+    //                       .whenComplete(() => LoginPage());
+    //                 },
+    //                 child: Text("Logout"))
+    //           ],
+    //         );
+    //       } else {
+    //         return Container(
+    //           width: 2200,
+    //           height: 2200,
+    //           color: Colors.black,
+    //           child: Text(
+    //             snapshot.data.toString(),
+    //           ),
+    //         );
+    //       }
+    //     }));
   }
 }
