@@ -5,7 +5,7 @@ import 'package:jofinance/modules/login/models/user_login.dart';
 
 class FirestoreService {
   // Read specific user
-  Future<String> readUser() async {
+  static Future<Userauth?> readUser() async {
     final docUser = FirebaseFirestore.instance
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.uid);
@@ -13,18 +13,22 @@ class FirestoreService {
     final snapshot = await docUser.get();
 
     if (snapshot.exists) {
-      return snapshot.data().toString();
-    } else {
-      return "knto";
+      return Userauth.fromJson(snapshot.data()!);
     }
   }
 
   // Save username registant to firestore
-  Future saveUser(userid, username) async {
+  Future saveUser({userid, username, email, password}) async {
     DocumentReference documentReferencer =
         FirebaseFirestore.instance.collection('users').doc(userid);
 
-    Map<String, dynamic> data = <String, dynamic>{"username": username};
+    // Mappers format
+    Map<String, dynamic> data = <String, dynamic>{
+      "user_id": userid,
+      "username": username,
+      "email": email,
+      "password": password
+    };
 
     await documentReferencer
         .set(data)
@@ -32,18 +36,13 @@ class FirestoreService {
         .catchError((e) => print(e));
   }
 
-  readUsers(x) async {
-    CollectionReference _collectionRef =
-        FirebaseFirestore.instance.collection('users');
-    QuerySnapshot querySnapshot = await _collectionRef.get();
-    final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
-    List<String> tes = [];
-    for (var cnt = 0; cnt < allData.length; cnt++) {}
-    for (var cnt = 0; cnt < tes.length; cnt++) {
-      if (tes[cnt] == x) {
-        return true;
-      }
-    }
-    return tes;
-  }
+  // static Future<Userauth?> readUsers(x) async {
+  //   final docUser = FirebaseFirestore.instance.collection('users');
+
+  //   final snapshot = await docUser.get();
+
+  //   if (snapshot.exists) {
+  //     return Userauth.fromJson(snapshot.data()!);
+  //   }
+  // }
 }

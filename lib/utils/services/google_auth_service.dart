@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:jofinance/modules/dashboard/screens/main_page.dart';
+import 'package:jofinance/modules/login/models/user_login.dart';
+import 'package:jofinance/utils/services/firestore_service.dart';
 
 class GoogleauthService extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -25,37 +27,70 @@ class GoogleauthService extends ChangeNotifier {
 
     // Check if there is no linking with google
 
-    final check = await FirebaseAuth.instance.signInWithCredential(credential);
-    log(check.additionalUserInfo.toString());
+    // Check credential email or google
+    // ignore: unrelated_type_equality_checks
 
-    FirebaseAuth.instance.currentUser!
-        .linkWithCredential(EmailAuthProvider.credential(
-            email: "zoemohamed31@gmail.com", password: "123456"))
-        .whenComplete(() => const MainPage());
+    await FirebaseAuth.instance.signInWithCredential(credential);
+    final Userauth? user = await FirestoreService.readUser();
+    final checkFetch = await FirebaseAuth.instance
+        .fetchSignInMethodsForEmail(
+            FirebaseAuth.instance.currentUser!.email.toString())
+        .then((value) {
+      log(value.toString());
+      return value;
+    });
+    if (!checkFetch.contains("password")) {
+      FirebaseAuth.instance.currentUser!
+          .linkWithCredential(EmailAuthProvider.credential(
+              email: FirebaseAuth.instance.currentUser!.email.toString(),
+              password: user!.password))
+          .whenComplete(() => const MainPage());
+      notifyListeners();
+    }
 
     // Notify Provider listener if there is change in widget tree
-
-    notifyListeners();
   }
 
   Future googleSignOut() async {
     try {
-      (FirebaseAuth.instance.fetchSignInMethodsForEmail(
-              FirebaseAuth.instance.currentUser!.email.toString()))
-          .then((value) => log(value.toString()));
-      final check_fetch = await FirebaseAuth.instance
+      final checkFetch = await FirebaseAuth.instance
           .fetchSignInMethodsForEmail(
               FirebaseAuth.instance.currentUser!.email.toString())
-          .then((value) => value);
-      if ((check_fetch.length) > 0) {
+          .then((value) {
+        log(value.toString());
+        return value;
+      });
+      if (checkFetch.contains("password") &&
+          !checkFetch.contains('google.com')) {
         FirebaseAuth.instance.currentUser!.unlink("password");
-        await _googleSignIn.disconnect();
-        FirebaseAuth.instance.signOut();
-        notifyListeners();
-      } else {
-        // FirebaseAuth.instance.currentUser!.unlink("google.com");
 
         FirebaseAuth.instance.signOut();
+        notifyListeners();
+      } else if (checkFetch.contains("password") &&
+          checkFetch.contains("google.com")) {
+        FirebaseAuth.instance.currentUser!.unlink("google.com");
+        await _googleSignIn.disconnect();
+
+        FirebaseAuth.instance.signOut();
+        notifyListeners();
+      } else if (!checkFetch.contains("password") &&
+          checkFetch.contains("google.com")) {
+        // FirebaseAuth.instance.currentUser!.unlink("google.com");
+        await _googleSignIn.disconnect();
+
+        FirebaseAuth.instance.signOut();
+        notifyListeners();
+      } else if (checkFetch.contains("password")) {
+        // FirebaseAuth.instance.currentUser!.unlink("password");
+
+        FirebaseAuth.instance.signOut();
+        notifyListeners();
+      } else if (checkFetch.contains("google.com")) {
+        // FirebaseAuth.instance.currentUser!.unlink("google.com");
+        await _googleSignIn.disconnect();
+
+        FirebaseAuth.instance.signOut();
+
         notifyListeners();
       }
     } catch (e) {

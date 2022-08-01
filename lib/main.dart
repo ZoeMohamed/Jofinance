@@ -29,10 +29,6 @@ class MyApp extends StatelessWidget {
                   create: (context) => EmailAuthService()),
               ChangeNotifierProvider<GoogleauthService>(
                   create: (context) => GoogleauthService()),
-              StreamProvider(
-                  create: (context) =>
-                      context.read<GoogleauthService>().onAuthStateChanged,
-                  initialData: "No users")
             ],
             child: const MaterialApp(
                 debugShowCheckedModeBanner: false, home: TransitionPage()),

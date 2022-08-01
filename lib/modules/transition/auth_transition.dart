@@ -21,9 +21,10 @@ class _TransitionPageState extends State<TransitionPage> {
   Widget build(BuildContext context) {
     GoogleauthService auth =
         Provider.of<GoogleauthService>(context, listen: false);
+
     return Scaffold(
       body: StreamBuilder<User?>(
-        stream: auth.onAuthStateChanged,
+        stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, AsyncSnapshot snapshot) {
           // Waiting Data from stream
           log(snapshot.data.toString());

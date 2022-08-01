@@ -22,6 +22,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     _passwordvisible = false;
+
     super.initState();
   }
 
