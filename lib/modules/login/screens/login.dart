@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:jofinance/modules/dashboard/screens/main_page.dart';
 import 'package:jofinance/utils/services/google_auth_service.dart';
 import 'package:jofinance/modules/register/screens/register.dart';
 import 'package:sizer/sizer.dart';
@@ -31,6 +32,12 @@ class _LoginPageState extends State<LoginPage> {
     _emailcontroller.dispose();
     _passwordcontroller.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() async {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
   }
 
   @override
@@ -198,7 +205,9 @@ class _LoginPageState extends State<LoginPage> {
                   final provider =
                       Provider.of<GoogleauthService>(context, listen: false);
 
-                  provider.googleSignIn();
+                  provider.googleSignIn().whenComplete(() =>
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (context) => MainPage())));
                 },
                 child: Image.asset(
                   "assets/appImages/google_logo.png",

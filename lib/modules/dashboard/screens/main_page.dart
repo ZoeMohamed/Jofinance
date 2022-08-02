@@ -56,7 +56,11 @@ class _MainPageState extends State<MainPage> {
           onPressed: () {
             final provider =
                 Provider.of<GoogleauthService>(context, listen: false);
-            provider.googleSignOut().whenComplete(() => LoginPage());
+            provider.googleSignOut().whenComplete(() =>
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (BuildContext context) {
+                  return const LoginPage();
+                })));
           },
           child: Text("Logout")),
     ));
