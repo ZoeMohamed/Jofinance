@@ -6,6 +6,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:jofinance/modules/dashboard/screens/main_page.dart';
 import 'package:jofinance/modules/login/screens/login.dart';
 import 'package:jofinance/modules/register/screens/register.dart';
+import 'package:jofinance/utils/services/firestore_service.dart';
 import 'package:jofinance/utils/services/google_auth_service.dart';
 import 'package:provider/provider.dart';
 
@@ -33,14 +34,17 @@ class _TransitionPageState extends State<TransitionPage> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const CircularProgressIndicator();
           } else if (snapshot.hasData) {
-            log("data user ada");
-
-            return const MainPage();
-            // Navigate to Mainpage if there is authchanges
-          } else {
-            // Navigate to Login
-            return const LoginPage();
+            if (FirestoreService.checkUsers(
+                    FirebaseAuth.instance.currentUser!.uid) ==
+                true) {
+              return const MainPage();
+            }
           }
+
+          return const LoginPage();
+          // final provider =
+          //     Provider.of<GoogleauthService>(context, listen: false);
+          // provider.googleSignOut();
         },
       ),
     );

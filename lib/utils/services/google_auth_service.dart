@@ -25,30 +25,23 @@ class GoogleauthService extends ChangeNotifier {
     final credential = GoogleAuthProvider.credential(
         idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
 
-    // Check if there is no linking with google
-
-    // Check credential email or google
-    // ignore: unrelated_type_equality_checks
-
     await FirebaseAuth.instance.signInWithCredential(credential);
     final Userauth? user = await FirestoreService.readUser();
+    // Prevent user from login without register
     final checkFetch = await FirebaseAuth.instance
         .fetchSignInMethodsForEmail(
             FirebaseAuth.instance.currentUser!.email.toString())
         .then((value) {
-      log(value.toString());
       return value;
     });
-    if (!checkFetch.contains("password")) {
+    if (!checkFetch.contains("password") && user?.password != null) {
       FirebaseAuth.instance.currentUser!
           .linkWithCredential(EmailAuthProvider.credential(
               email: FirebaseAuth.instance.currentUser!.email.toString(),
               password: user!.password))
           .whenComplete(() => const MainPage());
       notifyListeners();
-    }
-
-    // Notify Provider listener if there is change in widget tree
+    } else if (checkFetch.contains("google.com")) {}
   }
 
   Future googleSignOut() async {
@@ -62,7 +55,7 @@ class GoogleauthService extends ChangeNotifier {
       });
       if (checkFetch.contains("password") &&
           !checkFetch.contains('google.com')) {
-        FirebaseAuth.instance.currentUser!.unlink("password");
+        // FirebaseAuth.instance.currentUser!.unlink("password");
 
         FirebaseAuth.instance.signOut();
         notifyListeners();

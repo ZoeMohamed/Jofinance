@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:jofinance/modules/dashboard/screens/main_page.dart';
+import 'package:jofinance/utils/services/firestore_service.dart';
 import 'package:jofinance/utils/services/google_auth_service.dart';
 import 'package:jofinance/modules/register/screens/register.dart';
 import 'package:sizer/sizer.dart';
@@ -23,7 +24,6 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     _passwordvisible = false;
-
     super.initState();
   }
 
@@ -138,18 +138,15 @@ class _LoginPageState extends State<LoginPage> {
                 width: 330,
                 child: ElevatedButton(
                     onPressed: () async {
-                      setState(() {
-                        try {
-                          final credential = FirebaseAuth.instance
-                              .signInWithEmailAndPassword(
-                                  email: _emailcontroller.text.trim(),
-                                  password: _passwordcontroller.text.trim());
-                        } catch (e) {
-                          log(e.toString());
-                          if (e == 'user-not-found') {
-                          } else if (e == 'wrong-password') {}
-                        }
-                      });
+                      FirebaseAuth.instance
+                          .signInWithEmailAndPassword(
+                              email: _emailcontroller.text.trim(),
+                              password: _passwordcontroller.text.trim())
+                          .whenComplete(() => Navigator.pushReplacement(context,
+                                  MaterialPageRoute(
+                                      builder: (BuildContext context) {
+                                return MainPage();
+                              })));
                     },
                     child: Text(
                       "Login",
@@ -205,9 +202,29 @@ class _LoginPageState extends State<LoginPage> {
                   final provider =
                       Provider.of<GoogleauthService>(context, listen: false);
 
-                  provider.googleSignIn().whenComplete(() =>
+                  provider.googleSignIn().whenComplete(() {
+                    if (FirestoreService.checkUsers(
+                            FirebaseAuth.instance.currentUser!.uid) ==
+                        true) {
                       Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) => MainPage())));
+                          MaterialPageRoute(builder: (BuildContext context) {
+                        return const MainPage();
+                      }));
+                    } else if (FirestoreService.checkUsers(
+                            FirebaseAuth.instance.currentUser!.uid) ==
+                        false) {
+                      final provider = Provider.of<GoogleauthService>(context,
+                          listen: false);
+                      provider.googleSignOut();
+                      log("LNO");
+
+                      // FirebaseAuth.instance.currentUser!.delete();
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (BuildContext context) {
+                        return LoginPage();
+                      }));
+                    }
+                  });
                 },
                 child: Image.asset(
                   "assets/appImages/google_logo.png",
